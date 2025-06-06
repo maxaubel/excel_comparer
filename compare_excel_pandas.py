@@ -1,5 +1,3 @@
-import openpyxl
-from openpyxl.styles import Font, PatternFill
 import pandas as pd
 from tqdm import tqdm
 from datetime import datetime
@@ -20,12 +18,12 @@ def compare_excel_files_by_keys(file1, file2, output_file):
 
         df['same'] = df.duplicated(subset=df.columns[:-2], keep=False).astype(int)
 
-        other_cols = ['MO', 'Atributo' if 'Atributo' in df.columns else 'Feature', 'filename', 'same']
+        other_cols = ['MO', 'Atributo' if 'Atributo' in df.columns else ('Parametro' if 'Parametro' in df.columns else 'Feature'), 'filename', 'same']
         cols = df.columns.tolist()
         cols = other_cols + [col for col in cols if col not in other_cols]
         df = df[cols]
 
-        df = df.sort_values(['Atributo' if 'Atributo' in df.columns else 'Feature', 'filename'])
+        df = df.sort_values(['Atributo' if 'Atributo' in df.columns else ('Parametro' if 'Parametro' in df.columns else 'Feature'), 'filename'])
 
         if sheet == sheets[0]:
             df = df[cols]
@@ -38,8 +36,8 @@ def compare_excel_files_by_keys(file1, file2, output_file):
 
     print("Comparison completed. Results saved to", output_file)
 
-file1 = "MZI051_OPTI.xlsx"
-file2 = "MZI051_RAW.xlsx"
+file1 = "RND_MZU173_PROD.xlsx"
+file2 = "RND_MZU173_FIXED.xlsx"
 output_file = file1.split(".")[0] + "-" + file2.split(".")[0] + "_comparison_" + datetime.now().strftime("%Y%m%d%H%M") + ".xlsx"
 
 compare_excel_files_by_keys(file1, file2, output_file)
